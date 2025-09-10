@@ -1,0 +1,56 @@
+body {
+    background: #181b21;
+    color: #d1d5db;
+    font-family: "Fira Mono", "Consolas", monospace;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+#terminal {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #23272e;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px #000a 0;
+    min-height: 420px;
+}
+
+#output {
+    min-height: 320px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+#input-line {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.prompt {
+    color: #7dd3fc;
+    margin-right: 6px;
+    font-weight: bold;
+}
+
+#command-input {
+    background: transparent;
+    border: none;
+    color: #d1d5db;
+    font: inherit;
+    outline: none;
+    width: 90%;
+    font-size: 1em;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background: #23272e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #353b45;
+    border-radius: 4px;
+}
