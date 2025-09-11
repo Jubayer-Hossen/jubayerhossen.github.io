@@ -7,7 +7,6 @@ body {
     min-height: 100vh;
     width: 100vw;
     box-sizing: border-box;
-    /* prevent the browser body from showing a page-level scrollbar; terminal-content will handle scrolling */
     overflow: hidden;
 }
 
@@ -17,7 +16,6 @@ body {
 
 #terminal {
     width: 100vw;
-    /* make the terminal fill the viewport and lay out its children vertically */
     min-height: 100vh;
     height: 100vh;
     margin: 0;
@@ -53,12 +51,9 @@ body {
     margin-left: 2px;
 }
 
-/* Container which holds the output lines and the input-line at the bottom.
-   We keep it scrollable; new lines are inserted before the input-line so it moves down. */
 #terminal-content {
-    /* allow terminal-content to grow and fill remaining vertical space inside #terminal */
     flex: 1 1 auto;
-    min-height: 0; /* allow proper flexbox overflow behaviour */
+    min-height: 0;
     overflow-y: auto;
     white-space: pre-wrap;
     word-break: break-word;
@@ -70,7 +65,6 @@ body {
     display: block;
 }
 
-/* Hide visible scrollbar on #terminal-content but keep it scrollable */
 #terminal-content {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
@@ -115,7 +109,7 @@ body {
     font: inherit;
     outline: none;
     flex: 1;
-    min-width: 0; /* allow flex item to shrink instead of forcing wrap */
+    min-width: 0;
     font-size: 1em;
     caret-color: #a3e635;
 }
@@ -125,7 +119,6 @@ body {
     opacity: 1;
 }
 
-/* Blinking cursor effect for the input */
 #command-input:focus {
     outline: none;
 }
@@ -191,7 +184,6 @@ body {
         opacity: 1;
     }
 
-    /* Blinking cursor effect for the input */
     #command-input:focus {
         outline: none;
     }
@@ -215,4 +207,16 @@ body {
 ::-webkit-scrollbar-thumb {
     background: #353b45;
     border-radius: 4px;
+}
+
+/* Ensure links inside the terminal match the surrounding text color */
+#terminal-content a,
+#terminal-content a:link,
+#terminal-content a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+#terminal-content a:hover,
+#terminal-content a:focus {
+    text-decoration: underline;
 }
