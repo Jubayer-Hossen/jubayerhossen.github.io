@@ -8,11 +8,11 @@ let contentEl = null;
 const promptHTML = '<span class="prompt">Visitor@JubayerHossen.github.io&gt;</span> ';
 
 const COMMANDS = {
-    "-help": {
+    "--help": {
         description: "List available commands",
         action: function() {
             return `Available commands:
-  -help         Show this help message
+  --help         Show this help message
   about        About me
   projects     List my projects
   contact      Contact information
@@ -55,6 +55,11 @@ LinkedIn: https://linkedin.com/in/jubayer-hossen`;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Backwards-compat: map 'help' to '--help' if present so both work
+if (typeof COMMANDS !== 'undefined' && COMMANDS['--help'] && !COMMANDS['help']) {
+    COMMANDS['help'] = COMMANDS['--help'];
 }
 
 function printOutput(text) {
@@ -121,7 +126,7 @@ function handleCommand(cmd) {
         const result = COMMANDS[command].action();
         if (result) printOutput(result);
     } else {
-        printOutput(`Command not found: ${command}\nType 'help' to see available commands.`);
+        printOutput(`Command not found: ${command}\nType '--help' or press 'h' to see available commands.`);
     }
 
     sleep(150).then(() => {
@@ -168,6 +173,41 @@ function buildTerminalElements() {
             handleCommand(value);
         }
     });
+
+    inputEl.addEventListener('blur', function() {
+        setTimeout(() => {
+            const active = document.activeElement;
+            if (!inputEl || inputEl.disabled) return;
+            if (active && (active.tagName === 'A' || active.isContentEditable)) return;
+            inputEl.focus();
+        }, 0);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!inputEl || inputEl.disabled) return;
+        if (e.target.closest && e.target.closest('#terminal-content a')) return; 
+        inputEl.focus();
+    });
+
+    window.addEventListener('focus', function() {
+        if (inputEl && !inputEl.disabled) inputEl.focus();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (!inputEl || inputEl.disabled) return;
+        const active = document.activeElement;
+        const isTypingArea = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+
+        if (!isTypingArea && (e.key === 'h' || e.key === 'H') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            e.preventDefault();
+            handleCommand('help');
+            return;
+        }
+
+        if (!isTypingArea && e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            inputEl.focus();
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -176,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onload = async function() {
-    welcomeEl.innerHTML = "Welcome to my Terminal Portfolio!<br>Type '<span style='color:#7dd3fc'>-help</span>' or press '<span style='color:#7dd3fc'>h</span>' to get started.";
+    welcomeEl.innerHTML = "Welcome to my Terminal Portfolio!<br>Type '<span style='color:#7dd3fc'>--help</span>' or press '<span style='color:#7dd3fc'>h</span>' to get started.";
     await sleep(600);
     await sleep(300);
     showInputLine(true);
