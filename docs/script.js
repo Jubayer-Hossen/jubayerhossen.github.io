@@ -75,10 +75,12 @@ function printOutput(text) {
 
 function clearOutput() {
     if (!contentEl || !inputLineEl) return;
-    // remove all children except the inputLineEl
+    // remove all children except the inputLineEl and preserve ascii-art & welcome-message
     const nodes = Array.from(contentEl.childNodes);
     for (const n of nodes) {
-        if (n !== inputLineEl) contentEl.removeChild(n);
+        if (n === inputLineEl) continue;
+        if (n.id === 'ascii-art' || n.id === 'welcome-message') continue;
+        contentEl.removeChild(n);
     }
     // keep scroll at top
     contentEl.scrollTop = 0;
@@ -127,11 +129,15 @@ function handleCommand(cmd) {
 
 // We create the output and input-line at runtime so index.html can be minimal.
 function buildTerminalElements() {
-    // content container that will hold output lines and input-line at the end
-    contentEl = document.createElement('div');
-    contentEl.id = 'terminal-content';
-    contentEl.setAttribute('aria-live', 'polite');
-    terminalEl.appendChild(contentEl);
+    // If index.html already includes #terminal-content (we moved ascii & welcome into it), reuse it.
+    contentEl = document.getElementById('terminal-content');
+    if (!contentEl) {
+        // content container that will hold output lines and input-line at the end
+        contentEl = document.createElement('div');
+        contentEl.id = 'terminal-content';
+        contentEl.setAttribute('aria-live', 'polite');
+        terminalEl.appendChild(contentEl);
+    }
 
     // input-line (will be appended into content so new lines can be inserted before it)
     inputLineEl = document.createElement('div');

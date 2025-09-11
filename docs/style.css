@@ -7,6 +7,8 @@ body {
     min-height: 100vh;
     width: 100vw;
     box-sizing: border-box;
+    /* prevent the browser body from showing a page-level scrollbar; terminal-content will handle scrolling */
+    overflow: hidden;
 }
 
 #terminal {
@@ -15,7 +17,9 @@ body {
 
 #terminal {
     width: 100vw;
+    /* make the terminal fill the viewport and lay out its children vertically */
     min-height: 100vh;
+    height: 100vh;
     margin: 0;
     padding: 32px;
     background: none;
@@ -25,7 +29,8 @@ body {
     text-align: left;
     white-space: pre-wrap;
     word-break: break-word;
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 #ascii-art {
@@ -51,8 +56,9 @@ body {
 /* Container which holds the output lines and the input-line at the bottom.
    We keep it scrollable; new lines are inserted before the input-line so it moves down. */
 #terminal-content {
-    min-height: 320px;
-    max-height: 60vh;
+    /* allow terminal-content to grow and fill remaining vertical space inside #terminal */
+    flex: 1 1 auto;
+    min-height: 0; /* allow proper flexbox overflow behaviour */
     overflow-y: auto;
     white-space: pre-wrap;
     word-break: break-word;
@@ -62,6 +68,16 @@ body {
     padding-bottom: 8px;
     text-align: left;
     display: block;
+}
+
+/* Hide visible scrollbar on #terminal-content but keep it scrollable */
+#terminal-content {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+#terminal-content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 
 .terminal-line {
